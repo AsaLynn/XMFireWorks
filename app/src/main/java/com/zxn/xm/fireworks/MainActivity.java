@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.zxn.wym.fireworks.widget.FireworkDrawable;
 import com.zxn.wym.fireworks.widget.FireworkView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -22,7 +24,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initView() {
         fv = (FireworkView) findViewById(R.id.fv);
-
+        fv.setOnDismissListener(new FireworkDrawable.OnDismissListener() {
+            @Override
+            public void onDismiss(FireworkDrawable fireworkDrawable) {
+                Toast.makeText(MainActivity.this, "烟花散尽了啊!!!!!", Toast.LENGTH_SHORT).show();
+            }
+        });
 //        fv.setImageDrawable();
         tv = (TextView) findViewById(R.id.tv);
         tv.setOnClickListener(MainActivity.this);
@@ -33,9 +40,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.tv) {
-            fv.showFire(true);
+            fv.showFirework();
         } else if (view.getId() == R.id.tv_off) {
-            fv.showFire(false);
+            //fv.showFirework();
         }
     }
 }

@@ -4,6 +4,7 @@ import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.zxn.wym.fireworks.bean.Firework;
 import com.zxn.wym.fireworks.bean.Particle;
@@ -19,10 +20,12 @@ public class FireworkDrawable extends Drawable {
     private float boomMaxH;
     private float boomMinH;
     Paint mPaint = new Paint();
-    private int fireworkCount = 4;
+    private int fireworkCount = 7;
+    //    private int fireworkCount = 1;
     private List<Firework> list = new ArrayList<>();
     private float gravityEffect = 10;
-    private boolean isFire;
+    private boolean isShow = true;
+    private String TAG = FireworkDrawable.class.getSimpleName();
 
     public FireworkDrawable(float w, float h) {
         this.w = w;
@@ -35,6 +38,7 @@ public class FireworkDrawable extends Drawable {
         for (int i = 0; i < fireworkCount; i++) {
             list.add(createFirework());
         }
+
     }
 
     private Firework createFirework() {
@@ -50,33 +54,38 @@ public class FireworkDrawable extends Drawable {
         return firework;
     }
 
+//    private List<Firework> removeList = new ArrayList<>();
+
     @Override
     public void draw(@NonNull Canvas canvas) {
-        List<Firework> removeList = new ArrayList<>();
-        for (Firework firework : list) {
-            if (firework.isBoom()) {
-                if (firework.getList().size() == 0) {
-                    removeList.add(firework);
-                }
-            } else {
-                if (firework.getRealPoint().y < h / 6 || firework.getRealPoint().y > groundH) {
-                    removeList.add(firework);
-                }
-            }
-        }
-        if (removeList.size() > 0) {
-            list.removeAll(removeList);
-            for (int i = 0; i < removeList.size(); i++) {
-                Firework firework = createFirework();
-                list.add(firework);
-            }
-        }
+//        Log.i(TAG, "removeList.size: " + removeList.size());
+//        removeList.clear();
+//        for (Firework firework : list) {
+//            if (firework.isBoom()) {
+//                if (firework.getList().size() == 0) {
+//                    removeList.add(firework);
+//                }
+//            } else {
+//                if (firework.getRealPoint().y < h / 6 || firework.getRealPoint().y > groundH) {
+//                    removeList.add(firework);
+//                }
+//            }
+//        }
+
+//        if (removeList.size() > 0) {
+//            list.removeAll(removeList);
+//            for (int i = 0; i < removeList.size(); i++) {
+//                Firework firework = createFirework();
+//                list.add(firework);
+//            }
+//        }
+
         if (list.size() > 0) {
             for (Firework firework : list) {
-                drawFirework(canvas, firework);
-            }
-            if (isFire) {
-                invalidateSelf();
+                if (!firework.isDispersed()) {
+                    drawFirework(canvas, firework);
+                    invalidateSelf();
+                }
             }
         }
     }
@@ -116,7 +125,18 @@ public class FireworkDrawable extends Drawable {
                 mPaint.setStrokeWidth(0);
                 canvas.drawCircle(realPoint.x, realPoint.y, initRadius, mPaint);
             }
+
+            if (remainList.size() == 0) {
+                firework.setDispersed(true);
+                if (list.indexOf(firework) == list.size() - 1) {
+                    Log.i(TAG, "drawFirework: 烟花散尽了啊----");
+                    if (mOnDismissListener != null) {
+                        mOnDismissListener.onDismiss(null);
+                    }
+                }
+            }
         } else {
+
             firework.onRefresh();
             PointF pointF = firework.getRealPoint();
             RadialGradient radialGradient = new RadialGradient(
@@ -127,7 +147,6 @@ public class FireworkDrawable extends Drawable {
             mPaint.setShader(radialGradient);
             canvas.drawCircle(pointF.x, pointF.y, firework.getInitRadius() * 2, mPaint);
         }
-
     }
 
     @Override
@@ -154,11 +173,36 @@ public class FireworkDrawable extends Drawable {
     }
 
 
-    public boolean isFire() {
-        return isFire;
+    public boolean isShow() {
+        return isShow;
     }
 
-    public void setFire(boolean fire) {
-        isFire = fire;
+    public void showFirework() {
+//        isShow = show;
+        list.clear();
+        for (int i = 0; i < fireworkCount; i++) {
+            list.add(createFirework());
+        }
+        invalidateSelf();
+    }
+
+    /**
+     * Interface used to allow the creator of a Firework to run some code when the
+     * Firework is dismissed.
+     */
+    public interface OnDismissListener {
+        /**
+         * This method will be invoked when the Firework is dismissed.
+         *
+         * @param fireworkDrawable the fireworkView that was dismissed will be passed into the
+         *                         method
+         */
+        void onDismiss(FireworkDrawable fireworkDrawable);
+    }
+
+    private OnDismissListener mOnDismissListener;
+
+    public void setOnDismissListener(OnDismissListener listener) {
+        this.mOnDismissListener = listener;
     }
 }

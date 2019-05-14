@@ -3,13 +3,16 @@ package com.zxn.wym.fireworks.bean;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.zxn.wym.fireworks.util.MathUtil;
+import com.zxn.wym.fireworks.widget.FireworkDrawable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Firework {
+    private String TAG = Firework.class.getSimpleName();
     List<Particle> list = new ArrayList<>();
     private int scaleMode;
     private int colorMode;
@@ -22,6 +25,15 @@ public class Firework {
     private float initSpeed;
     private int initColor;
     private float initRadius;
+    private boolean isDispersed;//散尽
+
+    public boolean isDispersed() {
+        return isDispersed;
+    }
+
+    public void setDispersed(boolean dispersed) {
+        isDispersed = dispersed;
+    }
 
     public Firework() {
     }
@@ -72,6 +84,7 @@ public class Firework {
         for (int i = 0; i < 120; i++) {
             list.add(new Particle(realPoint, scaleMode, initColor));
         }
+        Log.i(TAG, "onBoom: ");
     }
 
     public void onRefresh() {
@@ -85,6 +98,7 @@ public class Firework {
         long currentMillis = SystemClock.uptimeMillis();
         float duration = (float) (currentMillis - startMillis) / 1000f;
         realPoint.y = startPoint.y - (initSpeed * duration - 0.5f * gravityEffect * (float) Math.pow(duration, 2));
+        Log.i(TAG, "onRefresh: ");
     }
 
     public List<Particle> getList() {

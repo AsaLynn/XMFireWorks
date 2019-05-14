@@ -2,6 +2,7 @@ package com.zxn.wym.fireworks.bean;
 
 import android.graphics.PointF;
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.zxn.wym.fireworks.constants.Ratio;
 import com.zxn.wym.fireworks.util.MathUtil;
@@ -65,6 +66,7 @@ public class Particle {
         }
     }
 
+    private int refreshCount;
 
     public void refresh() {
         long currentMillis = SystemClock.uptimeMillis();
@@ -79,12 +81,13 @@ public class Particle {
         realPoint = calculateByDuration(endSecondF);
         float xOffset = realPoint.x - trailStart.x;
         float yOffset = realPoint.y - trailStart.y;
-        if (xOffset == 0){
-            moveAngle = (float) Math.PI/2;
-        }else {
-            moveAngle = (float) Math.atan(yOffset/xOffset);
+        if (xOffset == 0) {
+            moveAngle = (float) Math.PI / 2;
+        } else {
+            moveAngle = (float) Math.atan(yOffset / xOffset);
         }
-
+        refreshCount++;
+        Log.i("refreshCount", "refreshCount: "+refreshCount);
     }
 
     private PointF calculateByDuration(float duration) {

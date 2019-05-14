@@ -13,7 +13,7 @@ public class FireworkView extends AppCompatImageView {
     private float mWidth;
     private float mHeight;
 
-    private Drawable mImageDrawable;
+    private FireworkDrawable mImageDrawable;
     private Drawable mBackgroundDrawable;
 
     public FireworkView(Context context) {
@@ -21,31 +21,31 @@ public class FireworkView extends AppCompatImageView {
         init(context);
     }
 
-    public FireworkView(Context context,  @Nullable AttributeSet attrs) {
+    public FireworkView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
 
     }
 
-    public FireworkView(Context context,  @Nullable AttributeSet attrs, int defStyleAttr) {
+    public FireworkView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
-    private void init(Context context){
+    private void init(Context context) {
         mWidth = context.getResources().getDisplayMetrics().widthPixels;
         Ratio.SCREEN_WIDTH = mWidth;
         mHeight = context.getResources().getDisplayMetrics().heightPixels;
         setWillNotDraw(false);
-        mImageDrawable = new FireworkDrawable(mWidth,mHeight);
-        mBackgroundDrawable = new NightDrawable(mWidth,mHeight);
-
+        mImageDrawable = new FireworkDrawable(mWidth, mHeight);
+        mBackgroundDrawable = new NightDrawable(mWidth, mHeight);
+        setBackgroundDrawable(mBackgroundDrawable);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        setBackgroundDrawable(mBackgroundDrawable);
+//        setBackgroundDrawable(mBackgroundDrawable);
         setImageDrawable(mImageDrawable);
     }
 
@@ -53,11 +53,17 @@ public class FireworkView extends AppCompatImageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if(mWidth>0&&mHeight>0){
+        if (mWidth > 0 && mHeight > 0) {
             setMeasuredDimension((int) mWidth, (int) (mHeight));
         }
     }
 
 
+    public void showFire(boolean show) {
+        mImageDrawable.setFire(show);
+        if (show){
+            mImageDrawable.invalidateSelf();
+        }
+    }
 
 }

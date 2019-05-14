@@ -22,6 +22,7 @@ public class FireworkDrawable extends Drawable {
     private int fireworkCount = 4;
     private List<Firework> list = new ArrayList<>();
     private float gravityEffect = 10;
+    private boolean isFire;
 
     public FireworkDrawable(float w, float h) {
         this.w = w;
@@ -53,12 +54,12 @@ public class FireworkDrawable extends Drawable {
     public void draw(@NonNull Canvas canvas) {
         List<Firework> removeList = new ArrayList<>();
         for (Firework firework : list) {
-            if (firework.isBoom()){
-                if (firework.getList().size() == 0){
+            if (firework.isBoom()) {
+                if (firework.getList().size() == 0) {
                     removeList.add(firework);
                 }
-            }else{
-                if (firework.getRealPoint().y<h/6||firework.getRealPoint().y>groundH){
+            } else {
+                if (firework.getRealPoint().y < h / 6 || firework.getRealPoint().y > groundH) {
                     removeList.add(firework);
                 }
             }
@@ -74,7 +75,9 @@ public class FireworkDrawable extends Drawable {
             for (Firework firework : list) {
                 drawFirework(canvas, firework);
             }
-            invalidateSelf();
+            if (isFire) {
+                invalidateSelf();
+            }
         }
     }
 
@@ -118,7 +121,7 @@ public class FireworkDrawable extends Drawable {
             PointF pointF = firework.getRealPoint();
             RadialGradient radialGradient = new RadialGradient(
                     pointF.x, pointF.y, firework.getInitRadius() * 2,
-                    new int[]{ Color.WHITE, Color.WHITE, firework.getInitColor()}, new float[]{0f, 0.4f, 1f},
+                    new int[]{Color.WHITE, Color.WHITE, firework.getInitColor()}, new float[]{0f, 0.4f, 1f},
                     Shader.TileMode.MIRROR
             );
             mPaint.setShader(radialGradient);
@@ -151,4 +154,11 @@ public class FireworkDrawable extends Drawable {
     }
 
 
+    public boolean isFire() {
+        return isFire;
+    }
+
+    public void setFire(boolean fire) {
+        isFire = fire;
+    }
 }

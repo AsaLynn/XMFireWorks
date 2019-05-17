@@ -25,9 +25,10 @@ public class FireworkDrawable extends Drawable {
     private List<Firework> list = new ArrayList<>();
     private float gravityEffect = 10;
     private boolean isShow = true;
+    private boolean mShowFirework;
     private String TAG = FireworkDrawable.class.getSimpleName();
 
-    public FireworkDrawable(float w, float h) {
+    public FireworkDrawable(float w, float h,int fireworkCount) {
         this.w = w;
         this.h = h;
         groundH = h / 8 * 7;
@@ -35,6 +36,7 @@ public class FireworkDrawable extends Drawable {
         boomMinH = h / 3;
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
+        this.fireworkCount = fireworkCount;
         for (int i = 0; i < fireworkCount; i++) {
             list.add(createFirework());
         }
@@ -80,7 +82,7 @@ public class FireworkDrawable extends Drawable {
 //            }
 //        }
 
-        if (list.size() > 0) {
+        if (list.size() > 0 && mShowFirework) {
             for (Firework firework : list) {
                 if (!firework.isDispersed()) {
                     drawFirework(canvas, firework);
@@ -179,7 +181,12 @@ public class FireworkDrawable extends Drawable {
 
     public void showFirework() {
 //        isShow = show;
-        list.clear();
+        if (mShowFirework){
+            list.clear();
+        }
+        if (!mShowFirework) {
+            mShowFirework = true;
+        }
         for (int i = 0; i < fireworkCount; i++) {
             list.add(createFirework());
         }
@@ -204,5 +211,13 @@ public class FireworkDrawable extends Drawable {
 
     public void setOnDismissListener(OnDismissListener listener) {
         this.mOnDismissListener = listener;
+    }
+
+    public void setFireworkCount(int fireworkCount) {
+        this.fireworkCount = fireworkCount;
+    }
+
+    public void setShowFirework(boolean showFirework) {
+        this.mShowFirework = showFirework;
     }
 }

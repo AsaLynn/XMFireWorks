@@ -2,12 +2,14 @@ package com.zxn.wym.fireworks.widget;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import com.zxn.wym.fireworks.R;
 import com.zxn.wym.fireworks.constants.Ratio;
 
 public class FireworkView extends AppCompatImageView {
@@ -18,21 +20,36 @@ public class FireworkView extends AppCompatImageView {
     private FireworkDrawable mImageDrawable;
     private Drawable mBackgroundDrawable;
     private String TAG = FireworkView.class.getSimpleName();
+    private boolean mShowBg;
+    private int mFireworkCount;
+    private boolean mShowFirework;
 
     public FireworkView(Context context) {
-        super(context);
-        init(context);
+        this(context, null);
+//        init(context);
     }
 
     public FireworkView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init(context);
+        this(context, attrs, 0);
+//        init(context);
 
     }
 
     public FireworkView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initAttributeSet(attrs);
         init(context);
+    }
+
+    private void initAttributeSet(@Nullable AttributeSet attrs) {
+        if (null == attrs) return;
+
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FireworkView);
+        if (null == typedArray) return;
+        mShowBg = typedArray.getBoolean(R.styleable.FireworkView_showBg, true);
+        mFireworkCount = typedArray.getInt(R.styleable.FireworkView_fireworkCount, 7);
+        mShowFirework = typedArray.getBoolean(R.styleable.FireworkView_showFirework, false);
+        typedArray.recycle();
     }
 
     private void init(Context context) {
@@ -40,9 +57,13 @@ public class FireworkView extends AppCompatImageView {
         Ratio.SCREEN_WIDTH = mWidth;
         mHeight = context.getResources().getDisplayMetrics().heightPixels;
         setWillNotDraw(false);
-        mImageDrawable = new FireworkDrawable(mWidth, mHeight);
-        mBackgroundDrawable = new NightDrawable(mWidth, mHeight);
-        setBackgroundDrawable(mBackgroundDrawable);
+        mImageDrawable = new FireworkDrawable(mWidth, mHeight,mFireworkCount);
+//        mImageDrawable.setFireworkCount(mFireworkCount);
+        mImageDrawable.setShowFirework(mShowFirework);
+        if (mShowBg) {
+            mBackgroundDrawable = new NightDrawable(mWidth, mHeight);
+            setBackgroundDrawable(mBackgroundDrawable);
+        }
     }
 
     @Override
@@ -66,24 +87,15 @@ public class FireworkView extends AppCompatImageView {
 
 
     public void showFirework() {
+
         mImageDrawable.showFirework();
     }
 
-//    /**
-//     * Interface used to allow the creator of a Firework to run some code when the
-//     * Firework is dismissed.
-//     */
-//    interface OnDismissListener {
-//        /**
-//         * This method will be invoked when the Firework is dismissed.
-//         *
-//         * @param fireworkView the fireworkView that was dismissed will be passed into the
-//         *                     method
-//         */
-//        void onDismiss(FireworkView fireworkView);
-//    }
-//    private OnDismissListener mOnDismissListener;
     public void setOnDismissListener(FireworkDrawable.OnDismissListener listener) {
         mImageDrawable.setOnDismissListener(listener);
+    }
+
+    public void setFireworkCount(int fireworkCount) {
+        mImageDrawable.setFireworkCount(fireworkCount);
     }
 }

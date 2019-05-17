@@ -7,10 +7,10 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 6
+        versionName "1.0.5"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
 
@@ -28,8 +28,8 @@ dependencies {
 
     implementation 'com.android.support:appcompat-v7:28.0.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+//    androidTestImplementation 'com.android.support.test:runner:1.0.3'
+//    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
 apply plugin: 'com.github.dcendents.android-maven'
@@ -38,7 +38,7 @@ def siteUrl = 'https://github.com/zhang721688/XMFireWorks'
 def gitUrl = 'https://github.com/zhang721688/XMFireWorks.git'
 def libName = "xm-fireworks"
 group = "com.zxn.wym.fireworks"
-version = "1.0.1"
+version = "1.0.5"
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier = 'sources'

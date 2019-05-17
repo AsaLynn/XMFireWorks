@@ -26,9 +26,12 @@ public class NightDrawable extends Drawable {
     public NightDrawable(float w, float h) {
         this.w = w;
         this.h = h;
-        this.moonX = w / 4 * 3;
-        this.moonY = h / 6;
-        this.moonR = h / 20;
+//        this.moonX = w / 4 * 3;
+        this.moonX = w / 10 * 9;
+//        this.moonY = h / 6;
+        this.moonY = h / 16;
+//        this.moonR = h / 20;
+        this.moonR = h / 25;
         this.textX = w/2;
         this.textY = h/3*2;
         this.starR = moonR/3;
